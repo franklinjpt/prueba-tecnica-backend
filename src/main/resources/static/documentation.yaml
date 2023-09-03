@@ -1,0 +1,221 @@
+openapi: 3.0.3
+info:
+  title: Prueba Tecnica Backend Trainee
+  description: CRUD of people
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /v1/api/people:
+    get:
+      tags:
+        - people
+      summary: Get all people
+      description: This endpoint returns a list of all people in the database
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/People'
+        '404':
+          description: No people found in the database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - people
+      summary: Create a new person
+      description: This endpoint creates a new person in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+            examples:
+              person_example:
+                value:
+                  documentNumber: "123456789"
+                  firstName: "Franklin"
+                  secondName: "Jesus"
+                  firstLastName: "Pineda"
+                  secondLastName: "Trujillo"
+                  birthDate: "2000-11-01"
+      responses:
+        '201':
+          description: Person Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        '400':
+          description: Bad Request, invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict, person already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /v1/api/people/{id}:
+    put:
+      tags:
+        - people
+      summary: Update a person
+      description: This endpoint updates a person in the database
+      parameters:
+        - name: id
+          in: path
+          description: ID of the person to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+            examples:
+              person_example:
+                value:
+                  firstName: "Pedro"
+                  secondName: "Miguel"
+                  firstLastName: "Pineda"
+                  secondLastName: "Trujillo"
+                  birthDate: "2000-11-01"
+      responses:
+        '200':
+          description: Person Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        '400':
+          description: Bad Request, invalid input
+
+        '404':
+          description: Person not found
+
+    patch:
+      tags:
+        - people
+      summary: Update birth date of a person
+      description: This endpoint updates the birth date of a person in the database
+      parameters:
+        - name: id
+          in: path
+          description: ID of the person to update the birth date
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+            examples:
+              person_example:
+                value:
+                  birthDate: "2000-11-01"
+      responses:
+        '200':
+          description: Person birth date updated
+        '400':
+          description: Bad Request, invalid input
+        '404':
+          description: Person not found
+    delete:
+      tags:
+        - people
+      summary: Delete a person
+      description: This endpoint deletes a person in the database
+      parameters:
+        - name: id
+          in: path
+          description: ID of the person to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Person Deleted
+        '404':
+          description: Person not found
+  /v1/api/people/document-number/{documentNumber}:
+    get:
+      tags:
+        - people
+      summary: Get a person by document number
+      description: This endpoint returns a person by document number
+      parameters:
+        - name: documentNumber
+          in: path
+          description: Document number of the person to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        '404':
+          description: Person not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Person:
+      type: object
+      required:
+        - documentNumber
+        - firstName
+        - firstLastName
+      properties:
+        id:
+          type: integer
+          description: ID of the person
+        documentNumber:
+          type: string
+          description: Document number of the person
+        firstName:
+          type: string
+          description: First name of the person
+        secondName:
+          type: string
+          description: Second name of the person
+        firstLastName:
+          type: string
+          description: First last name of the person
+        secondLastName:
+          type: string
+          description: Second last name of the person
+        birthDate:
+          type: string
+          format: date
+          description: Birth date of the person
+    People:
+      type: array
+      items:
+        $ref: '#/components/schemas/Person'
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code indicating the type of error
+        message:
+          type: string
+          description: Detailed error message explaining the error
+
+  
