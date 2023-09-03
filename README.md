@@ -11,11 +11,7 @@ Para poder ejecutar la aplicación, es necesario tener instalado Docker y Docker
 Para ejecutar la aplicación, es necesario seguir los siguientes pasos:
 
 1. Clonar el repositorio
-2. Antes de ejecutar la aplicación por primera vez se debe compilar el proyecto con el siguiente comando:
-```bash
-./gradlew build -x test
-```
-3. Ejecutar el siguiente comando para construir y levantar los contenedores:
+2. Ejecutar el siguiente comando para construir y levantar los contenedores:
 ```bash
 docker-compose up --build
 ```
